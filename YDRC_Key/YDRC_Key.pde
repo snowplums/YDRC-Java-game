@@ -1,0 +1,87 @@
+ArrayList<Sprite> bombs;
+Sprite player;
+
+
+void setup() {
+  imageMode(CENTER);
+  size (800, 600);
+  
+  player = new Sprite("steve.jpg", 1.0, width/2, height/2);
+  player.change_x = 0;
+  player.change_y = 0;
+  
+  bombs = new ArrayList<Sprite>();
+  
+  for(int i = 0; i < 20; i++){
+     bombs.add(new Sprite("bomb.png", 1.0, (int)random(0, 800), -30 * i));
+     bombs.get(i).change_y = 5;
+  }
+
+}
+
+void draw() {
+  background(255);
+  //background(255, 255, 255);
+  player.display();
+  player.update();
+  
+  for(int i = 0; i < bombs.size(); i++){
+    bombs.get(i).display();
+    bombs.get(i).update();
+    
+    if(bombs.get(i).center_y >= 600){
+      bombs.set(i, new Sprite("bomb.png", 1.0, (int)random(0, 800), 0));
+      bombs.get(i).change_y = 5;
+    }
+    
+    
+    if(collides(bombs.get(i), player)){
+      gameOver();
+    }
+    
+  }
+  
+  
+  
+  
+}
+
+void keyPressed() {
+  if(keyCode == UP){
+    player.change_y = -5;
+  }else if(keyCode == DOWN){
+    player.change_y = 5;
+  }else if(keyCode == LEFT){
+    player.change_x = -5;
+  }else if(keyCode == RIGHT){
+    player.change_x = 5;
+  }
+}
+
+
+void keyReleased() {
+  if(keyCode == UP){
+    player.change_y = 0;
+  }else if(keyCode == DOWN){
+    player.change_y = 0;
+  }else if(keyCode == LEFT){
+    player.change_x = 0;
+  }else if(keyCode == RIGHT){
+    player.change_x = 0;
+  }
+}
+
+
+boolean collides(Sprite s1, Sprite s2){
+  if(abs(s1.center_x - s2.center_x) < 25 && abs(s1.center_y - s2.center_y) < 45){
+    return true;
+  }
+  return false;
+}
+
+
+void gameOver(){
+ setup();
+    player.center_x = width/2;
+    player.center_y = height/2;
+}
